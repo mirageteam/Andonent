@@ -90,6 +90,11 @@ public class DragPinchListener implements OnTouchListener {
         void onDoubleTap(float x, float y);
 
     }
+    
+    
+    public interface onSingleTabListener {
+    	void onSingleTab();
+    }
 
     enum State {NONE, ZOOM, DRAG}
 
@@ -106,6 +111,8 @@ public class DragPinchListener implements OnTouchListener {
     private OnPinchListener onPinchListener;
 
     private OnDoubleTapListener onDoubleTapListener;
+    
+    private onSingleTabListener onSingleTabListener;
 
     private float lastDownX, lastDownY;
 
@@ -117,11 +124,12 @@ public class DragPinchListener implements OnTouchListener {
 
             // NORMAL CASE : FIRST POINTER DOWN
             case MotionEvent.ACTION_DOWN:
-                // Start dragging
+                // Start dragging 
                 startDrag(event);
                 state = State.DRAG;
                 lastDownX = event.getX();
                 lastDownY = event.getY();
+                
                 break;
 
             // NORMAL CASE : SECOND POINTER DOWN
@@ -153,6 +161,10 @@ public class DragPinchListener implements OnTouchListener {
                         lastClickTime = 0;
                     } else {
                         lastClickTime = System.currentTimeMillis();
+                        //single tab
+                        if(onSingleTabListener!=null){
+                        	onSingleTabListener.onSingleTab();
+                        }
                     }
                 }
                 break;
@@ -276,4 +288,8 @@ public class DragPinchListener implements OnTouchListener {
         this.onDoubleTapListener = onDoubleTapListener;
     }
 
+    
+    public void setOnSingleTabListener(onSingleTabListener onSingleTab){
+    	this.onSingleTabListener=onSingleTab;
+    }
 }

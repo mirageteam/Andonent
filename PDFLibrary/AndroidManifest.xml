@@ -8,19 +8,7 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="14" />
 
-    <application
-        android:allowBackup="true"
-        >
-        
-        <activity android:name=".PDFActivity">
-             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            
-        </activity>
-        
+    <application android:allowBackup="true" >
     </application>
 
 </manifest>

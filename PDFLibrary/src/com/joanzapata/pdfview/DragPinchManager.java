@@ -21,6 +21,7 @@ import com.joanzapata.pdfview.util.DragPinchListener;
 import com.joanzapata.pdfview.util.DragPinchListener.OnDoubleTapListener;
 import com.joanzapata.pdfview.util.DragPinchListener.OnDragListener;
 import com.joanzapata.pdfview.util.DragPinchListener.OnPinchListener;
+import com.joanzapata.pdfview.util.DragPinchListener.onSingleTabListener;
 
 import static com.joanzapata.pdfview.util.Constants.Pinch.*;
 
@@ -29,7 +30,7 @@ import static com.joanzapata.pdfview.util.Constants.Pinch.*;
  *         This Manager takes care of moving the PDFView,
  *         set its zoom track user actions.
  */
-class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapListener {
+class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapListener ,onSingleTabListener{
 
     private PDFView pdfView;
 
@@ -48,6 +49,7 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
         dragPinchListener.setOnDragListener(this);
         dragPinchListener.setOnPinchListener(this);
         dragPinchListener.setOnDoubleTapListener(this);
+        dragPinchListener.setOnSingleTabListener(this);
         pdfView.setOnTouchListener(dragPinchListener);
     }
 
@@ -117,5 +119,11 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
             pdfView.resetZoomWithAnimation();
         }
     }
+
+	@Override
+	public void onSingleTab() {
+		// TODO Auto-generated method stub
+		 pdfView.singleTab();
+	}
 
 }

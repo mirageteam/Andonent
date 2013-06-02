@@ -27,6 +27,7 @@ import com.joanzapata.pdfview.exception.FileNotFoundException;
 import com.joanzapata.pdfview.listener.OnDrawListener;
 import com.joanzapata.pdfview.listener.OnLoadCompleteListener;
 import com.joanzapata.pdfview.listener.OnPageChangeListener;
+import com.joanzapata.pdfview.listener.OnSingleListener;
 import com.joanzapata.pdfview.model.PagePart;
 import com.joanzapata.pdfview.util.ArrayUtils;
 import com.joanzapata.pdfview.util.Constants;
@@ -148,6 +149,11 @@ public class PDFView extends SurfaceView {
 
     /** Call back object to call when the page has changed */
     private OnPageChangeListener onPageChangeListener;
+    
+    /**
+     * single click
+     */
+    private OnSingleListener onSingleListener;
 
     /** Call back object to call when the above layer is to drawn */
     private OnDrawListener onDrawListener;
@@ -267,6 +273,12 @@ public class PDFView extends SurfaceView {
             onPageChangeListener.onPageChanged(currentPage + 1, getPageCount());
         }
     }
+    
+    void singleTab(){
+    	if(onSingleListener!=null){
+    		onSingleListener.onSingleTab();
+    	}
+    }
 
     public int getPageCount() {
         if (originalUserPages != null) {
@@ -285,6 +297,10 @@ public class PDFView extends SurfaceView {
 
     private void setOnDrawListener(OnDrawListener onDrawListener) {
         this.onDrawListener = onDrawListener;
+    }
+    
+    private void setOnSingleTabListener(OnSingleListener onSingleTab){
+    	this.onSingleListener=onSingleTab;
     }
 
     public void recycle() {
@@ -750,7 +766,7 @@ public class PDFView extends SurfaceView {
     }
 
     /** Place the left and right masks around the current page. */
-    private void calculateMasksBounds() {
+    private void calculateMasksBounds() { 
         leftMask = new RectF(0, 0, getWidth() / 2 - toCurrentScale(optimalPageWidth) / 2, getHeight());
         rightMask = new RectF(getWidth() / 2 + toCurrentScale(optimalPageWidth) / 2, 0, getWidth(), getHeight());
     }
@@ -761,8 +777,7 @@ public class PDFView extends SurfaceView {
      * @param offsetX The big strip X offset to use as the left border of the screen.
      * @param offsetY The big strip Y offset to use as the right border of the screen.
      */
-    public void moveTo(float offsetX, float offsetY) {
-
+    public void moveTo(float offsetX, float offsetY) { 
         // Check Y offset
         if (toCurrentScale(optimalPageHeight) < getHeight()) {
             offsetY = getHeight() / 2 - toCurrentScale(optimalPageHeight) / 2;
@@ -915,6 +930,8 @@ public class PDFView extends SurfaceView {
 		 return new Configurator(Uri.fromFile(file));
    }
     
+     
+    
 
     private enum State {DEFAULT, LOADED, SHOWN}
 
@@ -931,6 +948,8 @@ public class PDFView extends SurfaceView {
         private OnLoadCompleteListener onLoadCompleteListener;
 
         private OnPageChangeListener onPageChangeListener;
+        
+        private OnSingleListener onSingle;
 
         private int defaultPage = 1;
 
@@ -969,11 +988,17 @@ public class PDFView extends SurfaceView {
             this.defaultPage = defaultPage;
             return this;
         }
+        
+        public Configurator onSingleTab(OnSingleListener onSingleTab){
+        	this.onSingle=onSingleTab;
+        	return this;
+        }
 
         public void load() {
             PDFView.this.recycle();
             PDFView.this.setOnDrawListener(onDrawListener);
             PDFView.this.setOnPageChangeListener(onPageChangeListener);
+            PDFView.this.setOnSingleTabListener(onSingle);
             PDFView.this.enableSwipe(enableSwipe);
             PDFView.this.setDefaultPage(defaultPage);
             PDFView.this.setUserWantsMinimap(showMinimap);
