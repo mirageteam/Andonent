@@ -1,0 +1,5 @@
+*.class
+PDFLibrary/gen/*
+PDFLibrary/bin/*
+*.apk
+*.dex
